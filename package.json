@@ -1,13 +1,45 @@
 {
+  "name": "aoe4-sortable-unit-list",
+  "version": "0.0.1",
+  "description": "",
+  "author": {
+    "name": "ytoune"
+  },
+  "engines": {
+    "node": ">= 20"
+  },
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "rimraf dist && node scripts/build.js",
-    "push-page": "gh-pages -d dist"
+    "build": "rimraf dist && vite build",
+    "dev": "vite",
+    "push-page": "gh-pages -d dist",
+    "test": "prettier -c . && vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "preact": "10.22.0"
   },
   "devDependencies": {
+    "@preact/preset-vite": "2.8.2",
+    "@types/node": "20.12.12",
+    "aoe4data": "git+https://github.com/aoe4world/data.git#main",
+    "esbuild": "0.21.3",
+    "esbuild-register": "3.5.0",
     "gh-pages": "6.1.1",
-    "rimraf": "5.0.7"
+    "prettier": "3.2.5",
+    "rimraf": "5.0.7",
+    "typescript": "5.4.5",
+    "vite": "5.2.11",
+    "vite-tsconfig-paths": "4.3.2",
+    "vitest": "1.6.0"
+  },
+  "prettier": {
+    "useTabs": false,
+    "singleQuote": true,
+    "trailingComma": "all",
+    "semi": false,
+    "arrowParens": "avoid",
+    "htmlWhitespaceSensitivity": "ignore"
   },
   "volta": {
     "node": "20.13.1",
