@@ -1,4 +1,4 @@
-import { Unit } from './data'
+import type { Unit } from './data'
 import { formatData } from './format'
 import {
   useKeys,

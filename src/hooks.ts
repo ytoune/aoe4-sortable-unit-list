@@ -1,8 +1,6 @@
 import { useReducer } from 'preact/hooks'
-import { Formated } from './format'
-import { CivAbbr } from 'aoe4data/src/types/civs'
-
-type Key = 'name' | 'icon' | 'speed' | 'dps' | 'armors' | 'costs' | 'civs'
+import type { Formated } from './format'
+import type { CivAbbr } from 'aoe4data/src/types/civs'
 
 export const useKeys = (() => {
   const init = [
