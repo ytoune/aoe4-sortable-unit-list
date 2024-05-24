@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -79,39 +79,34 @@
         })
         .sort((q, w) => w?.speed - q?.speed)
     const comps = {
-      name: ({ item }) =>
-        html`
-          <a
-            href=${`https://aoe4world.com/explorer/units/${item.id}`}
-            rel="nofollow noopener noreferrer"
-            target="_blank"
-          >
-            ${item.id}
-          </a>
-        `,
+      name: ({ item }) => html`
+        <a
+          href=${`https://aoe4world.com/explorer/units/${item.id}`}
+          rel="nofollow noopener noreferrer"
+          target="_blank"
+        >
+          ${item.id}
+        </a>
+      `,
       icon: ({ item }) =>
         Array.from(new Set(item.z_.map(i => i.icon))).map(
-          src =>
-            html`
-              <img
-                key=${src}
-                src=${src}
-                title=${src.match(/\/([^/]*)(\.[^.]+)$/u)?.[1]}
-              />
-            `,
+          src => html`
+            <img
+              key=${src}
+              src=${src}
+              title=${src.match(/\/([^/]*)(\.[^.]+)$/u)?.[1]}
+            />
+          `,
         ),
-      dps: ({ item }) =>
-        html`
-          <span>${item.dps.toFixed(2)}</span>
-        `,
-      costs: ({ item }) =>
-        html`
-          <span>${item.costText}</span>
-        `,
-      def: ({ item, p }) =>
-        html`
-          <span>${item[p]}</span>
-        `,
+      dps: ({ item }) => html`
+        <span>${item.dps.toFixed(2)}</span>
+      `,
+      costs: ({ item }) => html`
+        <span>${item.costText}</span>
+      `,
+      def: ({ item, p }) => html`
+        <span>${item[p]}</span>
+      `,
     }
     const renderItemProp = (item, p) => {
       const Comp = comps[p] || comps.def
@@ -289,49 +284,45 @@
         <div>
           <p class="tools">
             ${setlist.map(
-              ([k, v]) =>
-                html`
-                  <label key=${k}>
-                    <input
-                      type="checkbox"
-                      checked=${v}
-                      onChange=${e => setset({ key: k, val: e.target.checked })}
-                    />
-                    ${k}
-                  </label>
-                `,
+              ([k, v]) => html`
+                <label key=${k}>
+                  <input
+                    type="checkbox"
+                    checked=${v}
+                    onChange=${e => setset({ key: k, val: e.target.checked })}
+                  />
+                  ${k}
+                </label>
+              `,
             )}
           </p>
           <p class="tools">
             ${civset.map(
-              ([k, v]) =>
-                html`
-                  <label key=${k}>
-                    <input
-                      type="checkbox"
-                      checked=${v}
-                      onChange=${e =>
-                        setCivset({ key: k, val: e.target.checked })}
-                    />
-                    ${k}
-                  </label>
-                `,
+              ([k, v]) => html`
+                <label key=${k}>
+                  <input
+                    type="checkbox"
+                    checked=${v}
+                    onChange=${e =>
+                      setCivset({ key: k, val: e.target.checked })}
+                  />
+                  ${k}
+                </label>
+              `,
             )}
           </p>
           <p class="tools">
             ${keys.map(
-              ([k, v]) =>
-                html`
-                  <label key=${k}>
-                    <input
-                      type="checkbox"
-                      checked=${v}
-                      onChange=${e =>
-                        setKeys({ key: k, val: e.target.checked })}
-                    />
-                    ${k}
-                  </label>
-                `,
+              ([k, v]) => html`
+                <label key=${k}>
+                  <input
+                    type="checkbox"
+                    checked=${v}
+                    onChange=${e => setKeys({ key: k, val: e.target.checked })}
+                  />
+                  ${k}
+                </label>
+              `,
             )}
           </p>
           <table>
@@ -339,10 +330,9 @@
               ${keys
                 .filter(([, v]) => v)
                 .map(
-                  ([k]) =>
-                    html`
-                      <th key=${k} onClick=${() => setOrderKeys(k)}>${k}</th>
-                    `,
+                  ([k]) => html`
+                    <th key=${k} onClick=${() => setOrderKeys(k)}>${k}</th>
+                  `,
                 )}
             </tr>
             ${list.map(
@@ -351,10 +341,9 @@
                   ${keys
                     .filter(([, v]) => v)
                     .map(
-                      ([k]) =>
-                        html`
-                          <td key=${k}>${renderItemProp(item, k)}</td>
-                        `,
+                      ([k]) => html`
+                        <td key=${k}>${renderItemProp(item, k)}</td>
+                      `,
                     )}
                 </tr>
               `,
