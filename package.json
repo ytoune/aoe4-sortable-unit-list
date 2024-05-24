@@ -1,7 +1,16 @@
 {
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "build": "rimraf dist && node scripts/build.js",
+    "push-page": "gh-pages -d dist"
+  },
   "devDependencies": {
-    "gh-pages": "6.1.1"
+    "gh-pages": "6.1.1",
+    "rimraf": "5.0.7"
+  },
+  "volta": {
+    "node": "20.13.1",
+    "yarn": "1.22.22"
   }
 }
