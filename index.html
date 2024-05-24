@@ -43,7 +43,7 @@
             ),
           )
           const hashCost = c => {
-            const h = (k, v) => (c[k] ? k[0] + c[k] : '')
+            const h = k => (c[k] ? k[0] + c[k] : '')
             return [
               h('food'),
               h('wood'),
@@ -54,7 +54,14 @@
               h('vizier'),
             ].join('')
           }
+          const sumCost = c => {
+            const h = k => c[k] || 0
+            return (
+              h('food') + h('wood') + h('gold') + h('stone') + h('oliveoil')
+            )
+          }
           const costs = Array.from(new Set(_.flatMap(q => hashCost(q.costs))))
+          const costNum = Array.from(new Set(_.flatMap(q => sumCost(q.costs))))
           return {
             id: _[0].baseId,
             civs: Array.from(
@@ -63,7 +70,8 @@
             speed: speeds[0] ?? -1,
             dps: dps[0] ?? -1,
             armors: armors.join(),
-            costs: costs.join(),
+            costText: costs.join(),
+            costs: costNum.sort((q, w) => q - w)[0] ?? 0,
             z_: _,
             z_speed2: speeds.join(),
             z_dps: dps.join(),
@@ -95,6 +103,10 @@
       dps: ({ item }) =>
         html`
           <span>${item.dps.toFixed(2)}</span>
+        `,
+      costs: ({ item }) =>
+        html`
+          <span>${item.costText}</span>
         `,
       def: ({ item, p }) =>
         html`
@@ -138,7 +150,7 @@
         speed: number,
         dps: number,
         armors: string,
-        costs: string,
+        costs: number,
         civs: string,
       }
       const reduce = (keys, mut) => {
