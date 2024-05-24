@@ -134,8 +134,12 @@
       const number = (q = 0, w = 0) => q - w
       const comp = {
         name: string,
+        icon: string,
         speed: number,
         dps: number,
+        armors: string,
+        costs: string,
+        civs: string,
       }
       const reduce = (keys, mut) => {
         if (comp[mut]) {
