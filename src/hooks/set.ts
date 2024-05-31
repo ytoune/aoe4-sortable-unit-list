@@ -18,5 +18,9 @@ export const make = <T extends string>(
     return st.map(([k, v]) => (k === mut.key ? [k, mut.val] : [k, v]))
   }
 
-  return () => useReducer(reduce, init)
+  return () => {
+    const [val, set] = useReducer(reduce, init)
+    const arr = val.filter(p => p[1]).map(p => p[0])
+    return [val, set, arr] as const
+  }
 }
