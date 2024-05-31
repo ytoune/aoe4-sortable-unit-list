@@ -1,6 +1,9 @@
+import { CivAbbr } from 'aoe4data/src/types/civs'
 import type { Unit } from './data'
 
 export type Formated = ReturnType<typeof formatData>[number]
+export type Civ = `${CivAbbr}${number}`
+
 export const formatData = (data: Unit[]) =>
   Object.entries(
     // @ts-expect-error: ignore
@@ -38,17 +41,22 @@ export const formatData = (data: Unit[]) =>
       }
       const costs = Array.from(new Set(_.flatMap(q => hashCost(q.costs))))
       const costNum = Array.from(new Set(_.flatMap(q => sumCost(q.costs))))
+      const classes = Array.from(new Set(_.flatMap(q => q.classes)))
+      const producedBy = Array.from(new Set(_.flatMap(q => q.producedBy)))
+      const civs = Array.from(
+        new Set(_.flatMap(q => q.civs.map((c): Civ => `${c}${q.age}`))),
+      )
       return {
         id: _[0]!.baseId,
         name: _[0]!.baseId,
-        civs: Array.from(
-          new Set(_.flatMap(q => q.civs.map(c => c + q.age))),
-        ).join(),
         speed: speeds[0] ?? -1,
         dps: dps[0] ?? -1,
         armors: armors.join(),
         costText: costs.join(),
         costs: costNum.sort((q, w) => q - w)[0] ?? 0,
+        civs,
+        classes,
+        producedBy,
         z_: _,
         z_speed2: speeds.join(),
         z_dps: dps.join(),

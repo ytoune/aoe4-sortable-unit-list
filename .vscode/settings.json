@@ -40,5 +40,6 @@
   },
   "eslint.workingDirectories": ["*"],
   "editor.rulers": [80],
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "cSpell.words": ["civs"]
 }

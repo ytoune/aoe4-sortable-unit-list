@@ -22,6 +22,9 @@ const comps = {
       )),
   dps: ({ item }) => <span>{item.dps.toFixed(2)}</span>,
   costs: ({ item }) => <span>{item.costText}</span>,
+  classes: ({ item }) => <span>{item.classes.join()}</span>,
+  producedBy: ({ item }) => <span>{item.producedBy.join()}</span>,
+  civs: ({ item }) => <span>{item.civs.join()}</span>,
   def: ({ item, p }) => <span>{item[p]}</span>,
 } satisfies {
   [k in string]: (p: { item: Formated; p: keyof Formated }) => unknown

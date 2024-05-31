@@ -1,88 +1,97 @@
 import type { Unit } from './data'
 import { formatData } from './format'
-import {
-  useKeys,
-  useDataSetting,
-  useCivs,
-  useOrderKeys,
-  sortWithOrderKeys,
-} from './hooks'
+import { useAges, useCivs } from './hooks/civs'
+import { useOrderKeys, sortWithOrderKeys } from './hooks/order-keys'
+import { useKeys } from './hooks/keys'
 import { renderItemProp } from './render-item-prop'
-
-const checked = (e: { readonly target: EventTarget | null }): boolean =>
-  e.target && e.target instanceof HTMLInputElement ? e.target.checked : false
+import { make } from './hooks/set'
+import { useRef } from 'preact/hooks'
+import { ToolForSet } from './tool-for-set'
 
 export const App = ({ data }: { data: Unit[] }) => {
+  const [noShipClasses, useClasses] = (useRef<
+    [string[], ReturnType<typeof make>]
+  >().current ??= (() => {
+    const classes = Array.from(new Set(data.flatMap(q => q.classes)))
+    const noShipClasses = classes.filter(k => 'ship' !== k && 'warship' !== k)
+    return [
+      noShipClasses,
+      make(classes.map(k => [k, noShipClasses.includes(k)])),
+    ]
+  })())
+  const useProducer = (useRef<ReturnType<typeof make>>().current ??= make(
+    Array.from(new Set(data.flatMap(q => q.producedBy))).map(k => [k, true]),
+  ))
   const [keys, setKeys] = useKeys()
-  const [setlist, setset] = useDataSetting()
-  const [civmap, civset, setCivset] = useCivs()
+  const [civset, setCivset] = useCivs()
+  const [ages, setAges] = useAges()
   const [orderKeys, setOrderKeys] = useOrderKeys()
-  const setting = Object.fromEntries(setlist)
+  const [classes, setClasses] = useClasses()
+  const [producer, setProducer] = useProducer()
   const civsets = Object.fromEntries(civset)
+  const agesShown = ages.filter(([, v]) => v).map(p => Number(p[0]))
+  const classesShown = classes.filter(([, v]) => v).map(p => p[0])
+  const producerSelected = producer.filter(([, v]) => v).map(p => p[0])
   const list = formatData(
     data
-      .filter(q => setting['ship'] || !~q.classes.indexOf('ship'))
-      .filter(q => !setting['age<=2'] || q.age <= 2)
+      .filter(q => agesShown.includes(q.age))
+      .filter(q => q.classes.some(c => classesShown.includes(c)))
+      .filter(q => q.producedBy.some(p => producerSelected.includes(p)))
       .map(q => ({ ...q, civs: q.civs.filter(c => civsets[c]) }))
       .filter(q => q.civs.length),
   ).sort(sortWithOrderKeys(orderKeys))
   return (
     <div>
-      <p class="tools">
-        {setlist.map(([k, v]) => (
-          <label key={k}>
-            <input
-              type="checkbox"
-              checked={v}
-              onChange={e => setset({ key: k, val: checked(e) })}
-            />
-            {k}
-          </label>
-        ))}
-      </p>
-      <p class="tools">
-        {civset.map(([k, v]) => (
-          <label key={k}>
-            <input
-              type="checkbox"
-              checked={v}
-              onChange={e => setCivset({ key: k, val: checked(e) })}
-            />
-            {k}
-          </label>
-        ))}
-      </p>
-      <p class="tools">
-        {keys.map(([k, v]) => (
-          <label key={k}>
-            <input
-              type="checkbox"
-              checked={v}
-              onChange={e => setKeys({ key: k, val: checked(e) })}
-            />
-            {k}
-          </label>
-        ))}
-      </p>
+      <dl class="tools">
+        <ToolForSet title="civilizations" set={civset} update={setCivset} />
+        <ToolForSet title="age" set={ages} update={setAges} sub={false} />
+        <ToolForSet title="keys" set={keys} update={setKeys} sub={false} />
+        {!keys.some(([k, v]) => 'classes' === k && v) ? null : (
+          <ToolForSet
+            title="classes"
+            set={classes}
+            update={setClasses}
+            sub={
+              <label key="no-ship">
+                <input
+                  type="checkbox"
+                  checked={classes.every(([k, v]) =>
+                    'ship' !== k && 'warship' !== k ? v : !v,
+                  )}
+                  onChange={() => setClasses({ keys: noShipClasses })}
+                />
+                not ship
+              </label>
+            }
+          />
+        )}
+        {!keys.some(([k, v]) => 'producedBy' === k && v) ? null : (
+          <ToolForSet title="producedBy" set={producer} update={setProducer} />
+        )}
+      </dl>
       <table>
-        <tr>
-          {keys
-            .filter(([, v]) => v)
-            .map(([k]) => (
-              <th key={k} onClick={() => setOrderKeys(k)}>
-                {k}
-              </th>
-            ))}
-        </tr>
-        {list.map(item => (
-          <tr key={item.id}>
+        <thead>
+          <tr>
             {keys
               .filter(([, v]) => v)
               .map(([k]) => (
-                <td key={k}>{renderItemProp(item, k)}</td>
+                <th key={k} onClick={() => setOrderKeys(k)}>
+                  {k}
+                </th>
               ))}
           </tr>
-        ))}
+        </thead>
+        <tbody>
+          {list.map(item => (
+            <tr key={item.id}>
+              {keys
+                .filter(([, v]) => v)
+                .map(([k]) => (
+                  <td key={k}>{renderItemProp(item, k)}</td>
+                ))}
+            </tr>
+          ))}
+        </tbody>
       </table>
     </div>
   )
