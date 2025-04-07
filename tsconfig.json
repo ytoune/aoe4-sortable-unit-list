@@ -23,6 +23,6 @@
     "jsx": "react-jsx",
     "jsxImportSource": "preact"
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "scripts/**/*", "eslint.config.mjs"],
   "exclude": ["node_modules", "dist"]
 }
