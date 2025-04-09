@@ -81,6 +81,16 @@ const list = [
     name: "Zhu Xi's Legacy",
     href: 'https://aoe4world.com/explorer/civs/zhuxi',
   },
+  {
+    id: 'kt',
+    name: 'Knights Templar',
+    href: 'https://aoe4world.com/explorer/civs/templar',
+  },
+  {
+    id: 'hl',
+    name: 'House Lancaster',
+    href: 'https://aoe4world.com/explorer/civs/lancaster',
+  },
 ] as const
 
 const init = list.map(i => [i.id, true as boolean] as const)
