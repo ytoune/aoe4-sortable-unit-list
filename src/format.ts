@@ -11,7 +11,8 @@ export const formatData = (data: Unit[]) =>
       [k in Unit['baseId']]: Unit[]
     },
   )
-    .map(([i, _]: [Unit['baseId'], Unit[]]) => {
+    .map(([id, _]: [Unit['baseId'], Unit[]]) => {
+      const displayNames: string[] = Array.from(new Set(_.flatMap(q => q.name)))
       const speeds: number[] = Array.from(
         new Set(_.flatMap(q => q.movement?.speed ?? [])),
       ).sort()
@@ -50,8 +51,9 @@ export const formatData = (data: Unit[]) =>
       const minCost = costNum.sort((q, w) => q - w).filter(n => 0 < n)[0] ?? 0
       const dpsPerCost = 0 < firstDps ? firstDps / minCost : 0
       return {
-        id: _[0]!.baseId,
-        name: _[0]!.baseId,
+        id,
+        displayNames,
+        name: displayNames[0] ?? id,
         speed: speeds[0] ?? -1,
         dps: firstDps,
         armors: armors.join(),
