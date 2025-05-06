@@ -10,6 +10,24 @@ const main = async () => {
   console.log(list)
   exports.json = json
   exports.list = list
+  // const tmp = list
+  //   .filter(d => 0 < d.dpsPerCost && Number.isFinite(d.dpsPerCost))
+  //   .sort((q, w) => w.dpsPerCost - q.dpsPerCost)
+  // exports.texText = [
+  //   '$$',
+  //   '\\begin{array}{|l|l|} \\hline',
+  //   ...tmp.map(
+  //     d =>
+  //       [d.displayNames[0] ?? d.name, d.dpsPerCost.toFixed(6)]
+  //         .map(t => '\\text{' + t + '}')
+  //         .join(' & ') + ' \\\\\\\\ \\hline',
+  //   ),
+  //   '\\end{array}',
+  //   '$$',
+  // ]
+  //   .map(d => d + '\n')
+  //   .join('')
+  // console.log(exports.texText)
   const root = document.querySelector('main')
   if (root) render(<App data={json.data} />, root)
 }
