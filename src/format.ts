@@ -47,8 +47,8 @@ export const formatData = (data: Unit[]) =>
         new Set(_.flatMap(q => q.civs.map((c): Civ => `${c}${q.age}`))),
       )
       const firstDps = dps[0] ?? -1
-      const minCost = costNum.sort((q, w) => q - w)[0] ?? 0
-      const dpsPerCost = firstDps / minCost
+      const minCost = costNum.sort((q, w) => q - w).filter(n => 0 < n)[0] ?? 0
+      const dpsPerCost = 0 < firstDps ? firstDps / minCost : 0
       return {
         id: _[0]!.baseId,
         name: _[0]!.baseId,

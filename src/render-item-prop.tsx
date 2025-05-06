@@ -1,5 +1,11 @@
 import type { Formated } from './format'
 
+const renderNumber = (num: number): string => {
+  if (Number.isNaN(num)) return 'NaN'
+  if (!Number.isFinite(num) || Number.isSafeInteger(num)) return `${num}`
+  return num.toFixed(6)
+}
+
 const comps = {
   name: ({ item }) => (
     <a
@@ -22,6 +28,7 @@ const comps = {
       )),
   dps: ({ item }) => <span>{item.dps.toFixed(2)}</span>,
   costs: ({ item }) => <span>{item.costText}</span>,
+  dpsPerCost: ({ item }) => <span>{renderNumber(item.dpsPerCost)}</span>,
   classes: ({ item }) => <span>{item.classes.join()}</span>,
   producedBy: ({ item }) => <span>{item.producedBy.join()}</span>,
   civs: ({ item }) => <span>{item.civs.join()}</span>,
