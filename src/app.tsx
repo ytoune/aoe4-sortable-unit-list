@@ -30,12 +30,17 @@ export const App = ({ data }: { data: Unit[] }) => {
     useHiddenClasses()
   const [producer, setProducer, producerSelected] = useProducer()
   const civsets = Object.fromEntries(civset)
+  const allProducerSelected = producer.length === producerSelected.length
   const list = formatData(
     data
       .filter(q => agesShown.includes(`${q.age}`))
       .filter(q => q.classes.some(c => classesShown.includes(c)))
       .filter(q => !q.classes.some(c => hiddenClasses.includes(c)))
-      .filter(q => q.producedBy.some(p => producerSelected.includes(p)))
+      .filter(
+        q =>
+          allProducerSelected ||
+          q.producedBy.some(p => producerSelected.includes(p)),
+      )
       .map(q => ({ ...q, civs: q.civs.filter(c => civsets[c]) }))
       .filter(q => q.civs.length),
   ).sort(sortWithOrderKeys(orderKeys))
