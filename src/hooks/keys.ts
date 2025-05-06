@@ -7,6 +7,7 @@ const init = [
   ['dps', true],
   ['armors', false],
   ['costs', false],
+  ['dpsPerCost', false],
   ['classes', false],
   ['producedBy', false],
   ['civs', true],

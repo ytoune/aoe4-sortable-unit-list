@@ -46,14 +46,18 @@ export const formatData = (data: Unit[]) =>
       const civs = Array.from(
         new Set(_.flatMap(q => q.civs.map((c): Civ => `${c}${q.age}`))),
       )
+      const firstDps = dps[0] ?? -1
+      const minCost = costNum.sort((q, w) => q - w)[0] ?? 0
+      const dpsPerCost = firstDps / minCost
       return {
         id: _[0]!.baseId,
         name: _[0]!.baseId,
         speed: speeds[0] ?? -1,
-        dps: dps[0] ?? -1,
+        dps: firstDps,
         armors: armors.join(),
         costText: costs.join(),
-        costs: costNum.sort((q, w) => q - w)[0] ?? 0,
+        costs: minCost,
+        dpsPerCost,
         civs,
         classes,
         producedBy,

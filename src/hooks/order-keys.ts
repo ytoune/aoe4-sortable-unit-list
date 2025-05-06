@@ -13,6 +13,7 @@ const comp = {
   dps: number,
   armors: string,
   costs: number,
+  dpsPerCost: number,
   classes: strings,
   producedBy: strings,
   civs: strings,
