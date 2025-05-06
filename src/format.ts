@@ -4,6 +4,25 @@ import type { Unit } from './data'
 export type Formated = ReturnType<typeof formatData>[number]
 export type Civ = `${CivAbbr}${number}`
 
+const weaponTypeRank = (
+  t: 'ranged' | 'siege' | 'melee' | 'fire' | 'charge',
+): 1 | 2 | 3 | 4 | 5 => {
+  switch (t) {
+    case 'ranged':
+      return 1
+    case 'siege':
+      return 4
+    case 'melee':
+      return 1
+    case 'fire':
+      return 5
+    case 'charge':
+      return 3
+    default:
+      return 2
+  }
+}
+
 export const formatData = (data: Unit[]) =>
   Object.entries(
     // @ts-expect-error: ignore
@@ -16,9 +35,16 @@ export const formatData = (data: Unit[]) =>
       const speeds: number[] = Array.from(
         new Set(_.flatMap(q => q.movement?.speed ?? [])),
       ).sort()
-      const dps: number[] = _.flatMap(q =>
-        q.weapons.map(w => (w ? w.damage / w.speed : 0)),
-      )
+      const weapons = _.flatMap(d => d.weapons)
+        .filter(w => w?.type)
+        .map((weapon, idx) => ({ idx, weapon }) as const)
+        .sort(
+          (q, w) =>
+            weaponTypeRank(q.weapon.type) - weaponTypeRank(w.weapon.type) ||
+            q.idx - w.idx,
+        )
+        .map(d => d.weapon)
+      const dps: number[] = weapons.map(w => (w ? w.damage / w.speed : 0))
       const armors: string[] = Array.from(
         new Set(
           _.flatMap(q => q.armor.map(a => (a ? a.type[0]! + a.value : '0'))),
