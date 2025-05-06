@@ -10,17 +10,38 @@ const main = async () => {
   console.log(list)
   exports.json = json
   exports.list = list
+  // let count = 0
+  // let prev: [number, string] | null = null
   // const tmp = list
   //   .filter(d => 0 < d.dpsPerCost && Number.isFinite(d.dpsPerCost))
   //   .sort((q, w) => w.dpsPerCost - q.dpsPerCost)
+  //   .map((d, i) => {
+  //     const notCount =
+  //       d.classes.some(c => 'ship' === c || 'warship' === c) ||
+  //       d.id.startsWith('clocktower') ||
+  //       d.id === 'handcannon-ashigaru'
+  //     if (notCount)
+  //       return {
+  //         idx: `- (${i + 1})`,
+  //         name: d.name,
+  //         dps: d.dpsPerCost.toFixed(6),
+  //       }
+  //     ++count
+  //     const dps = d.dpsPerCost.toFixed(6)
+  //     if (prev?.[1] !== dps) prev = [count, dps]
+  //     return {
+  //       idx: `${prev[0]} (${i + 1})`,
+  //       name: d.name,
+  //       dps,
+  //     }
+  //   })
   // exports.texText = [
   //   '$$',
-  //   '\\begin{array}{|l|l|} \\hline',
+  //   '\\begin{array}{|l|l|l|} \\hline',
   //   ...tmp.map(
   //     d =>
-  //       [d.displayNames[0] ?? d.name, d.dpsPerCost.toFixed(6)]
-  //         .map(t => '\\text{' + t + '}')
-  //         .join(' & ') + ' \\\\\\\\ \\hline',
+  //       [d.idx, d.name, d.dps].map(t => '\\text{' + t + '}').join(' & ') +
+  //       ' \\\\\\\\ \\hline',
   //   ),
   //   '\\end{array}',
   //   '$$',
