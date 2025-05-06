@@ -51,7 +51,8 @@ export const formatData = (data: Unit[]) =>
         ),
       )
       const hashCost = (c: Unit['costs']) => {
-        const h = (k: keyof Unit['costs']) => (c[k] ? k[0]! + c[k]! : '')
+        const h = (k: keyof Unit['costs']) =>
+          c[k] ? k[0]! + Math.floor(c[k]!) : ''
         return [
           h('food'),
           h('wood'),
@@ -68,6 +69,57 @@ export const formatData = (data: Unit[]) =>
       }
       const costs = Array.from(new Set(_.flatMap(q => hashCost(q.costs))))
       const costNum = Array.from(new Set(_.flatMap(q => sumCost(q.costs))))
+      type PartialCost = Partial<{
+        food: number
+        wood: number
+        gold: number
+        stone: number
+        oliveoil: number
+        time?: number
+        popcap?: number
+      }>
+      const makeCost = (c: PartialCost, div: number) => {
+        const food = (c.food ?? 0) / div
+        const wood = (c.wood ?? 0) / div
+        const gold = (c.gold ?? 0) / div
+        const stone = (c.stone ?? 0) / div
+        const oliveoil = (c.oliveoil ?? 0) / div
+        const time = c.time ?? 0
+        const popcap = (c.popcap ?? 1) / div
+        const total = food + wood + gold + stone + oliveoil
+        return {
+          food,
+          wood,
+          gold,
+          stone,
+          oliveoil,
+          time,
+          popcap,
+          total,
+        } as const
+      }
+      // const pushCost = (c: PartialCost) => {
+      //   const cost = makeCost(c, 1)
+      //   costs.push(hashCost(cost))
+      //   costNum.push(sumCost(cost))
+      // }
+      const replaceCost = (c: PartialCost, div = 1) => {
+        const cost = makeCost(c, div)
+        costs.splice(0, costs.length, hashCost(cost))
+        costNum.splice(0, costNum.length, sumCost(cost))
+      }
+      if ('shinobi' === id && costNum.join(':') === '0')
+        replaceCost({ food: 50, gold: 50 })
+      if ('wynguard-footman' === id) {
+        const item = data.find(d => 'wynguard-footmen' === d.id)
+        if (item?.costs) replaceCost(item.costs, item.costs.popcap)
+      }
+      if ('wynguard-ranger' === id) {
+        const item = data.find(d => 'wynguard-rangers' === d.id)
+        if (item?.costs) replaceCost(item.costs, item.costs.popcap)
+      }
+      if ('bedouin-swordsman' === id) replaceCost({ gold: 425 / 8 })
+      if ('bedouin-skirmisher' === id) replaceCost({ gold: 425 / 8 })
       const classes = Array.from(new Set(_.flatMap(q => q.classes)))
       const producedBy = Array.from(new Set(_.flatMap(q => q.producedBy)))
       const civs = Array.from(
