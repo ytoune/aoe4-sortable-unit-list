@@ -13,7 +13,7 @@ const comps = {
       rel="nofollow noopener noreferrer"
       target="_blank"
     >
-      {item.id}
+      {item.name}
     </a>
   ),
   icon: ({ item }) =>
