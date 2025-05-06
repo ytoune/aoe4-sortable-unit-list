@@ -1,9 +1,9 @@
 import type { Formated } from './format'
 
-const renderNumber = (num: number): string => {
+const renderNumber = (num: number, fix = 2): string => {
   if (Number.isNaN(num)) return 'NaN'
   if (!Number.isFinite(num) || Number.isSafeInteger(num)) return `${num}`
-  return num.toFixed(6)
+  return num.toFixed(fix)
 }
 
 const comps = {
@@ -26,9 +26,11 @@ const comps = {
           title={src.match(/\/([^/]*)(\.[^.]+)$/u)?.[1]}
         />
       )),
-  dps: ({ item }) => <span>{item.dps.toFixed(2)}</span>,
   costs: ({ item }) => <span>{item.costText}</span>,
-  dpsPerCost: ({ item }) => <span>{renderNumber(item.dpsPerCost)}</span>,
+  dps: ({ item }) => <span>{item.dps.toFixed(2)}</span>,
+  dpsPerCost: ({ item }) => <span>{renderNumber(item.dpsPerCost, 6)}</span>,
+  // hp: ({ item }) => <span>{item.hp}</span>,
+  hpPerCost: ({ item }) => <span>{renderNumber(item.hpPerCost, 2)}</span>,
   classes: ({ item }) => <span>{item.classes.join()}</span>,
   producedBy: ({ item }) => <span>{item.producedBy.join()}</span>,
   civs: ({ item }) => <span>{item.civs.join()}</span>,

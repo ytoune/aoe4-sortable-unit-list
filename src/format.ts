@@ -50,6 +50,7 @@ export const formatData = (data: Unit[]) =>
           _.flatMap(q => q.armor.map(a => (a ? a.type[0]! + a.value : '0'))),
         ),
       )
+      const hitpoints: number[] = Array.from(new Set(_.map(q => q.hitpoints)))
       const hashCost = (c: Unit['costs']) => {
         const h = (k: keyof Unit['costs']) =>
           c[k] ? k[0]! + Math.floor(c[k]!) : ''
@@ -128,6 +129,8 @@ export const formatData = (data: Unit[]) =>
       const firstDps = dps[0] ?? -1
       const minCost = costNum.sort((q, w) => q - w).filter(n => 0 < n)[0] ?? 0
       const dpsPerCost = 0 < firstDps ? firstDps / minCost : 0
+      const maxHitpoints = hitpoints.sort((q, w) => w - q)[0] ?? 0
+      const hpPerCost = 0 < maxHitpoints ? maxHitpoints / minCost : 0
       return {
         id,
         displayNames,
@@ -138,6 +141,8 @@ export const formatData = (data: Unit[]) =>
         costText: costs.join(),
         costs: minCost,
         dpsPerCost,
+        hp: maxHitpoints,
+        hpPerCost,
         civs,
         classes,
         producedBy,
