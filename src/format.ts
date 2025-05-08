@@ -121,6 +121,7 @@ export const formatData = (data: Unit[]) =>
       }
       if ('bedouin-swordsman' === id) replaceCost({ gold: 425 / 8 })
       if ('bedouin-skirmisher' === id) replaceCost({ gold: 425 / 8 })
+      if ('militia' === id) replaceCost({ food: 55 }, 2)
       const classes = Array.from(new Set(_.flatMap(q => q.classes)))
       const producedBy = Array.from(new Set(_.flatMap(q => q.producedBy)))
       const civs = Array.from(
