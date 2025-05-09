@@ -23,10 +23,13 @@ const weaponTypeRank = (
   }
 }
 
+const filterUnit = (d: Unit) =>
+  !('cavalry-archer' === d.baseId && 'ot' === d.civs.join(''))
+
 export const formatData = (data: Unit[]) =>
   Object.entries(
     // @ts-expect-error: ignore
-    Object.groupBy(data, q => q.baseId) as {
+    Object.groupBy(data.filter(filterUnit), q => q.baseId) as {
       [k in Unit['baseId']]: Unit[]
     },
   )
