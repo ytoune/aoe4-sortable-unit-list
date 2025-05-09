@@ -29,21 +29,38 @@ export const App = ({ data }: { data: Unit[] }) => {
   const [hiddenClassesList, setHiddenClasses, hiddenClasses] =
     useHiddenClasses()
   const [producer, setProducer, producerSelected] = useProducer()
-  const civsets = Object.fromEntries(civset)
-  const allProducerSelected = producer.length === producerSelected.length
-  const list = formatData(
-    data
-      .filter(q => agesShown.includes(`${q.age}`))
-      .filter(q => q.classes.some(c => classesShown.includes(c)))
-      .filter(q => !q.classes.some(c => hiddenClasses.includes(c)))
-      .filter(
-        q =>
-          allProducerSelected ||
-          q.producedBy.some(p => producerSelected.includes(p)),
+
+  const filteredData = () => {
+    let tmpdata = data
+
+    if (!agesShown.length) return []
+    if (ages.length !== agesShown.length)
+      tmpdata = tmpdata.filter(q => agesShown.includes(`${q.age}`))
+
+    if (!classesShown.length) return []
+    if (classes.length !== classesShown.length)
+      tmpdata = tmpdata.filter(q =>
+        q.classes.some(c => classesShown.includes(c)),
       )
-      .map(q => ({ ...q, civs: q.civs.filter(c => civsets[c]) }))
-      .filter(q => q.civs.length),
-  ).sort(sortWithOrderKeys(orderKeys))
+
+    if (!hiddenClasses.length)
+      tmpdata = tmpdata.filter(
+        q => !q.classes.some(c => hiddenClasses.includes(c)),
+      )
+
+    if (!producerSelected.length) return []
+    if (producer.length !== producerSelected.length)
+      tmpdata = tmpdata.filter(q =>
+        q.producedBy.some(p => producerSelected.includes(p)),
+      )
+
+    if (civset.every(c => c[1])) return tmpdata
+
+    const civsets = Object.fromEntries(civset)
+    tmpdata = tmpdata.map(q => ({ ...q, civs: q.civs.filter(c => civsets[c]) }))
+    return tmpdata.filter(q => q.civs.length)
+  }
+  const list = formatData(filteredData()).sort(sortWithOrderKeys(orderKeys))
   return (
     <div>
       <dl class="tools">
