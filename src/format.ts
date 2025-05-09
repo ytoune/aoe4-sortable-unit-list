@@ -35,6 +35,9 @@ export const formatData = (data: Unit[]) =>
   )
     .map(([id, _]: [Unit['baseId'], Unit[]]) => {
       const displayNames: string[] = Array.from(new Set(_.flatMap(q => q.name)))
+      const jaNames: string[] = Array.from(
+        new Set(_.flatMap(q => q.locale.ja?.name ?? q.name)),
+      )
       const speeds: number[] = Array.from(
         new Set(_.flatMap(q => q.movement?.speed ?? [])),
       ).sort()
@@ -126,6 +129,11 @@ export const formatData = (data: Unit[]) =>
       if ('bedouin-skirmisher' === id) replaceCost({ gold: 425 / 8 })
       if ('militia' === id) replaceCost({ food: 55 }, 2)
       const classes = Array.from(new Set(_.flatMap(q => q.classes)))
+      const jaClasses: string[] = Array.from(
+        new Set(
+          _.flatMap(q => q.locale.ja?.displayClasses ?? q.displayClasses),
+        ),
+      )
       const producedBy = Array.from(new Set(_.flatMap(q => q.producedBy)))
       const civs = Array.from(
         new Set(_.flatMap(q => q.civs.map((c): Civ => `${c}${q.age}`))),
@@ -138,6 +146,8 @@ export const formatData = (data: Unit[]) =>
       return {
         id,
         displayNames,
+        jaName: jaNames[0] ?? displayNames[0] ?? id,
+        jaNames,
         name: displayNames[0] ?? id,
         speed: speeds[0] ?? -1,
         dps: firstDps,
@@ -149,6 +159,7 @@ export const formatData = (data: Unit[]) =>
         hpPerCost,
         civs,
         classes,
+        jaClasses,
         producedBy,
         z_: _,
         z_speed2: speeds.join(),

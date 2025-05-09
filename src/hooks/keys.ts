@@ -1,7 +1,8 @@
 import { make } from './set'
 
 const init = [
-  ['name', true],
+  ['name', false],
+  ['jaName', true],
   ['icon', true],
   ['speed', true],
   ['dps', true],
@@ -11,6 +12,7 @@ const init = [
   ['hp', false],
   ['hpPerCost', false],
   ['classes', false],
+  ['jaClasses', false],
   ['producedBy', false],
   ['civs', true],
 ] as const

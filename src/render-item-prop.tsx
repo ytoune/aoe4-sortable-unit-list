@@ -16,6 +16,15 @@ const comps = {
       {item.name}
     </a>
   ),
+  jaName: ({ item }) => (
+    <a
+      href={`https://aoe4world.com/explorer/units/${item.id}`}
+      rel="nofollow noopener noreferrer"
+      target="_blank"
+    >
+      {item.jaName}
+    </a>
+  ),
   icon: ({ item }) =>
     Array.from(new Set(item.z_.map(i => i.icon)))
       .filter((src): src is string => !!src)

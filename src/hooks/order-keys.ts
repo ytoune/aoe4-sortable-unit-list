@@ -8,6 +8,7 @@ const strings = (q: readonly string[] = [], w: readonly string[] = []) =>
 
 const comp = {
   name: string,
+  jaName: string,
   icon: false,
   speed: number,
   dps: number,
@@ -17,6 +18,7 @@ const comp = {
   hp: number,
   hpPerCost: number,
   classes: strings,
+  jaClasses: strings,
   producedBy: strings,
   civs: strings,
 } as const
