@@ -37,9 +37,19 @@ const list = [
     href: 'https://aoe4world.com/explorer/civs/french',
   },
   {
+    id: 'gol',
+    name: 'Golden Horde',
+    href: 'https://aoe4world.com/explorer/civs/goldenhorde',
+  },
+  {
     id: 'hr',
     name: 'Holy Roman Empire',
     href: 'https://aoe4world.com/explorer/civs/hre',
+  },
+  {
+    id: 'hl',
+    name: 'House of Lancaster',
+    href: 'https://aoe4world.com/explorer/civs/lancaster',
   },
   {
     id: 'ja',
@@ -50,6 +60,16 @@ const list = [
     id: 'je',
     name: "Jeanne d'Arc",
     href: 'https://aoe4world.com/explorer/civs/jeannedarc',
+  },
+  {
+    id: 'kt',
+    name: 'Knights Templar',
+    href: 'https://aoe4world.com/explorer/civs/templar',
+  },
+  {
+    id: 'mac',
+    name: 'Macedonian Dynasty',
+    href: 'https://aoe4world.com/explorer/civs/macedonian',
   },
   {
     id: 'ma',
@@ -77,21 +97,25 @@ const list = [
     href: 'https://aoe4world.com/explorer/civs/rus',
   },
   {
+    id: 'sen',
+    name: 'Sengoku Daimyo',
+    href: 'https://aoe4world.com/explorer/civs/sengoku',
+  },
+  {
+    id: 'tug',
+    name: 'Tughlaq Dynasty',
+    href: 'https://aoe4world.com/explorer/civs/tughlaq',
+  },
+  {
     id: 'zx',
     name: "Zhu Xi's Legacy",
     href: 'https://aoe4world.com/explorer/civs/zhuxi',
   },
-  {
-    id: 'kt',
-    name: 'Knights Templar',
-    href: 'https://aoe4world.com/explorer/civs/templar',
-  },
-  {
-    id: 'hl',
-    name: 'House Lancaster',
-    href: 'https://aoe4world.com/explorer/civs/lancaster',
-  },
-] as const
+] as const satisfies {
+  id: string
+  name: string
+  href: `https://aoe4world.com/explorer/civs/${string}`
+}[]
 
 const init = list.map(i => [i.id, true as boolean] as const)
 

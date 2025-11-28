@@ -10,6 +10,21 @@ export type Unit = OrignalUnit & {
   }
 }
 
+const checkDepricated = (units: OrignalUnit[]) => {
+  const counts: Record<string, number> = {}
+  for (const unit of units) {
+    for (const civ of unit.civs) {
+      // const key = `${unit.id}:${civ}:${unit.age}`
+      const key = `${unit.id}:${civ}`
+      counts[key] = (counts[key] || 0) + 1
+    }
+  }
+  const duplicates = Object.entries(counts)
+    .filter(([_, count]) => count > 1)
+    .map(([key, count]) => `${key} * ${count}`)
+  return duplicates
+}
+
 export const getData = async (): Promise<{ data: Unit[] }> => {
   const [{ data }, { data: data2 }] = await Promise.all([
     fetch('https://data.aoe4world.com/units/all.json').then(r => r.json()),
