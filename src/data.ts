@@ -1,6 +1,6 @@
-import type { Unit as OrignalUnit } from 'aoe4data/src/types/items'
+import type { Unit as OriginalUnit } from 'aoe4data/src/types/items'
 
-export type Unit = OrignalUnit & {
+export type Unit = OriginalUnit & {
   locale: {
     [k in 'ja']?: {
       name: string
@@ -10,7 +10,7 @@ export type Unit = OrignalUnit & {
   }
 }
 
-const checkDepricated = (units: OrignalUnit[]) => {
+const checkDuplicated = (units: OriginalUnit[]) => {
   const counts: Record<string, number> = {}
   for (const unit of units) {
     for (const civ of unit.civs) {
@@ -35,7 +35,7 @@ export const getData = async (): Promise<{ data: Unit[] }> => {
   ])
   const map2 = Object.fromEntries(data2.map(d => [d.id, d]))
   return {
-    data: (data as OrignalUnit[]).map(d1 => ({
+    data: (data as OriginalUnit[]).map(d1 => ({
       ...d1,
       locale: { ...map2[d1.id]?.locale },
     })),
