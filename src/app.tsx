@@ -1,11 +1,11 @@
+import { useRef } from 'preact/hooks'
 import type { Unit } from './data'
 import { formatData } from './format'
 import { useAges, useCivs } from './hooks/civs'
-import { useOrderKeys, sortWithOrderKeys } from './hooks/order-keys'
 import { useKeys } from './hooks/keys'
-import { renderItemProp } from './render-item-prop'
+import { sortWithOrderKeys, useOrderKeys } from './hooks/order-keys'
 import { make } from './hooks/set'
-import { useRef } from 'preact/hooks'
+import { renderItemProp } from './render-item-prop'
 import { ToolForSet } from './tool-for-set'
 
 export const App = ({ data }: { data: Unit[] }) => {

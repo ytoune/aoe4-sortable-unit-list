@@ -13,7 +13,7 @@ export const makeTexText = (
       const notCount =
         d.classes.some(c => 'ship' === c || 'warship' === c) ||
         d.id.startsWith('clocktower') ||
-        d.id === 'handcannon-ashigaru'
+        'handcannon-ashigaru' === d.id
       const value = makeValue(d)
       if (notCount)
         return {
@@ -34,12 +34,13 @@ export const makeTexText = (
     '\\begin{array}{|l|l|l|} \\hline',
     ...tmp.map(
       d =>
-        [d.idx, d.name, d.value].map(t => '\\text{' + t + '}').join(' & ') +
-        ' \\\\\\\\ \\hline',
+        `${[d.idx, d.name, d.value]
+          .map(t => `\\text{${t}}`)
+          .join(' & ')} \\\\\\\\ \\hline`,
     ),
     '\\end{array}',
     '$$',
   ]
-    .map(d => d + '\n')
+    .map(d => `${d}\n`)
     .join('')
 }

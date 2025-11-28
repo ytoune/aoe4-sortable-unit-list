@@ -1,4 +1,4 @@
-import { CivAbbr } from 'aoe4data/src/types/civs'
+import type { CivAbbr } from 'aoe4data/src/types/civs'
 import type { Unit } from './data'
 
 export type Formated = ReturnType<typeof formatData>[number]
@@ -115,7 +115,7 @@ export const formatData = (data: Unit[]) =>
         costs.splice(0, costs.length, hashCost(cost))
         costNum.splice(0, costNum.length, sumCost(cost))
       }
-      if ('shinobi' === id && costNum.join(':') === '0')
+      if ('shinobi' === id && '0' === costNum.join(':'))
         replaceCost({ food: 50, gold: 50 })
       if ('wynguard-footman' === id) {
         const item = data.find(d => 'wynguard-footmen' === d.id)

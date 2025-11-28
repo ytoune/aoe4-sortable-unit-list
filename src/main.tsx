@@ -1,10 +1,11 @@
-import { getData } from './data'
-import { App } from './app'
-import { formatData } from './format'
 import { render } from 'preact'
+import { App } from './app'
+import { getData } from './data'
+import { formatData } from './format'
 import { makeTexText } from './tex-text'
 
 const main = async () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const exports: any = globalThis
   const json = await getData()
   const list = formatData(json.data)

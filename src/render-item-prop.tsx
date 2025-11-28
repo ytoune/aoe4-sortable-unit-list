@@ -51,6 +51,7 @@ export const renderItemProp = (
   item: Formated,
   p: keyof Formated | keyof typeof comps,
 ) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Comp = (comps as any)[p] || comps.def
   return <Comp item={item} p={p} />
 }

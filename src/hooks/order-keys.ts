@@ -45,6 +45,7 @@ export const sortWithOrderKeys =
   (q: Formated, w: Formated): number => {
     for (const [k, i] of keys)
       if ('icon' !== k) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const c = comp[k](q?.[k] as any, w?.[k] as any)
         if (c) return i * c
       }

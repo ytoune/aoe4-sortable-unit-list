@@ -1,49 +1,55 @@
 // @ts-check
 
-import path from 'node:path'
+import pt from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { fixupConfigRules, fixupPluginRules } from '@eslint/compat'
-// @ts-expect-error: ignore no type
-import _import from 'eslint-plugin-import'
+import { includeIgnoreFile } from '@eslint/compat'
+import js from '@eslint/js'
+import tsParser from '@typescript-eslint/parser'
+import { globalIgnores } from 'eslint/config'
+import eslintConfigPrettier from 'eslint-config-prettier/flat'
 import github from 'eslint-plugin-github'
 import globals from 'globals'
-import tsParser from '@typescript-eslint/parser'
-import js from '@eslint/js'
-import { FlatCompat } from '@eslint/eslintrc'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all,
-})
+const JS_EXT = 'ts,tsx,mts,mtsx,cts,ctsx,js,jsx,mjs,mjsx,cjs'
+const jsExtensions = JS_EXT.split(',')
+
+const githubConfigs = github.getFlatConfigs()
+
+const __dirname = pt.dirname(fileURLToPath(import.meta.url))
+const gitignorePath = pt.join(__dirname, '.gitignore')
+
+const ignores = [
+  'node_modules/',
+  'dist/',
+  '.cache/',
+  '.swc/',
+  'scripts/sandbox/',
+  '*',
+  '!*.config.mjs',
+  '!src/',
+  '!scripts/',
+]
 
 export default [
+  js.configs.recommended,
+  githubConfigs.recommended,
+  ...githubConfigs.typescript,
+  eslintConfigPrettier,
+  globalIgnores(ignores),
+  includeIgnoreFile(gitignorePath),
   {
-    ignores: ['node_modules', 'dist', '.cache', '.swc', 'scripts/sandbox*'],
-  },
-  ...fixupConfigRules(
-    compat.extends(
-      'prettier',
-      'plugin:import/typescript',
-      'plugin:github/recommended',
-      'plugin:github/typescript',
-    ),
-  ),
-  {
-    plugins: {
-      // '@typescript-eslint': typescriptEslint,
-      import: fixupPluginRules(_import),
-      // @ts-expect-error: as any
-      github: fixupPluginRules(github),
-    },
+    files: [`**/*.{${JS_EXT}}`],
     languageOptions: {
       globals: { ...globals.node, ...globals.jest },
       parser: tsParser,
       ecmaVersion: 5,
       sourceType: 'module',
-      parserOptions: { project: './tsconfig.json' },
+      parserOptions: {
+        projectService: {
+          allowDefaultProject: ['eslint.config.mjs'],
+        },
+        tsconfigRootDir: __dirname,
+      },
     },
     settings: {
       'import/resolver': {
@@ -51,31 +57,53 @@ export default [
         'eslint-import-resolver-typescript': true,
       },
       'import/parsers': {
-        '@typescript-eslint/parser': [
-          '.ts',
-          '.tsx',
-          '.mts',
-          '.cts',
-          '.js',
-          '.jsx',
-          '.mjs',
-          '.cjs',
-        ],
+        '@typescript-eslint/parser': jsExtensions,
       },
     },
     rules: {
-      yoda: ['error', 'always', { exceptRange: true }],
+      // yoda: ['error', 'always', { exceptRange: true,  }],
+      yoda: ['error', 'always', { onlyEquality: true }],
       complexity: ['error', 30],
       'prefer-arrow-callback': 'error',
       'arrow-body-style': ['error', 'as-needed'],
       'no-console': 'off',
+      'no-empty': ['error', { allowEmptyCatch: true }],
       'no-negated-condition': 'off',
+      'no-empty-pattern': ['error', { allowObjectPatternsAsParameters: true }],
       'func-style': ['error', 'expression'],
-      // 'filenames/match-regex': ['error', '^[a-z0-9-]+(.[a-z0-9-]+)?$'],
+      'github/filenames-match-regex': ['error', '^([a-z0-9-.]+)$'],
       'filenames/match-regex': 'off',
-      'import/order': 'error',
+      'import/order': [
+        'error',
+        {
+          groups: [
+            'builtin',
+            'external',
+            'internal',
+            'parent',
+            'sibling',
+            'index',
+          ],
+          pathGroups: [
+            { pattern: './+types/*', group: 'internal', position: 'before' },
+            { pattern: '~/**', group: 'internal', position: 'after' },
+            { pattern: '**/*.module.css', group: 'index', position: 'after' },
+          ],
+          distinctGroup: false,
+          'newlines-between': 'never',
+          alphabetize: { order: 'asc', caseInsensitive: true },
+          named: true,
+        },
+      ],
       'import/no-default-export': 'off',
+      'import/no-namespace': 'off',
       'import/no-cycle': 'off',
+      'import/no-named-as-default': 'off',
+      'import/extensions': [
+        'error',
+        'always',
+        Object.fromEntries(jsExtensions.map(e => [e, 'never'])),
+      ],
       'github/no-then': 'off',
       '@typescript-eslint/array-type': ['error', { default: 'array' }],
       '@typescript-eslint/no-explicit-any': ['warn', { fixToUnknown: true }],
@@ -83,6 +111,7 @@ export default [
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/strict-boolean-expressions': 'off',
       '@typescript-eslint/prefer-nullish-coalescing': 'off',
+      '@typescript-eslint/no-shadow': 'off',
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {
@@ -96,6 +125,14 @@ export default [
         'error',
         { fixStyle: 'separate-type-imports' },
       ],
+      'i18n-text/no-en': 'off',
+    },
+  },
+  {
+    files: ['scripts/sandbox*', '**/scripts/sandbox*'],
+    rules: {
+      'no-console': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
     },
   },
 ]
