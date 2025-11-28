@@ -8,15 +8,23 @@ import { make } from './hooks/set'
 import { renderItemProp } from './render-item-prop'
 import { ToolForSet } from './tool-for-set'
 
+const isShipClass = (k: string) =>
+  // 'ship' === k ||
+  // k.startsWith('ship_') ||
+  // k.endsWith('ship') ||
+  k.startsWith('naval_')
+
 export const App = ({ data }: { data: Unit[] }) => {
   const allClasses = (useRef<readonly string[]>().current ??= Array.from(
     new Set(data.flatMap(q => q.classes)),
-  ))
+  ).sort((q, w) => q.localeCompare(w, void 0, { numeric: true })))
+  const allShipClasses = (useRef<readonly string[]>().current ??=
+    allClasses.filter(isShipClass))
   const useClasses = (useRef<ReturnType<typeof make>>().current ??= make(
     allClasses.map(k => [k, true]),
   ))
   const useHiddenClasses = (useRef<ReturnType<typeof make>>().current ??= make(
-    allClasses.map(k => [k, 'ship' === k || 'warship' === k]),
+    allClasses.map(k => [k, isShipClass(k)]),
   ))
   const useProducer = (useRef<ReturnType<typeof make>>().current ??= make(
     Array.from(new Set(data.flatMap(q => q.producedBy))).map(k => [k, true]),
@@ -43,7 +51,7 @@ export const App = ({ data }: { data: Unit[] }) => {
         q.classes.some(c => classesShown.includes(c)),
       )
 
-    if (!hiddenClasses.length)
+    if (hiddenClasses.length)
       tmpdata = tmpdata.filter(
         q => !q.classes.some(c => hiddenClasses.includes(c)),
       )
@@ -79,11 +87,9 @@ export const App = ({ data }: { data: Unit[] }) => {
                   <input
                     type="checkbox"
                     checked={hiddenClassesList.every(([k, v]) =>
-                      'ship' === k || 'warship' === k ? v : !v,
+                      isShipClass(k) ? v : !v,
                     )}
-                    onChange={() =>
-                      setHiddenClasses({ keys: ['ship', 'warship'] })
-                    }
+                    onChange={() => setHiddenClasses({ keys: allShipClasses })}
                   />
                   ship or warship
                 </label>
